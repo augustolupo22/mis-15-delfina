@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis 15 - Delfina</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nude: { 50: '#fdf8f6', 100: '#f9ede8', 200: '#f3ddd4', 300: '#e8c4b5', 400: '#d4a08a', 500: '#c4856c', 600: '#b06a50', 700: '#935542', 800: '#7a473a', 900: '#663e34' },
+                        gold: { 50: '#fdfbf3', 100: '#faf4de', 200: '#f4e7b8', 300: '#edd588', 400: '#e5c04e', 500: '#dda92b', 600: '#c4891f', 700: '#a3661b', 800: '#86511d', 900: '#6f431c' },
+                        olive: { 50: '#f6f7f4', 100: '#e9ece3', 200: '#d3d9c8', 300: '#b5c0a5', 400: '#97a782', 500: '#7b8d65', 600: '#60704e', 700: '#4c593f', 800: '#3f4935', 900: '#363f2f' }
+                    },
+                    fontFamily: {
+                        cormorant: ['Cormorant Garamond', 'serif'],
+                        montserrat: ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scroll-behavior: smooth; }
+        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(221, 169, 43, 0.4); } 50% { box-shadow: 0 0 40px rgba(221, 169, 43, 0.7); } }
+        @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes confetti-fall { 0% { opacity: 1; transform: translateY(0) rotate(0deg); } 100% { opacity: 0; transform: translateY(100vh) rotate(720deg); } }
+        
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+        .animate-shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
+        .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+        
+        .section-hidden { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .section-visible { opacity: 1; transform: translateY(0); }
+        
+        .lightbox { backdrop-filter: blur(10px); }
+        
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        
+        .gradient-text { background: linear-gradient(135deg, #dda92b, #e5c04e, #f4e7b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        
+        input:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 0 2px rgba(221, 169, 43, 0.5); }
+        
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        .gallery-viewport { aspect-ratio: 4 / 5; touch-action: pan-y; }
+        .gallery-track { transition: transform 350ms ease; }
+        .gallery-slide img { transition: transform 350ms ease; }
+        .gallery-slide:hover img { transform: scale(1.02); }
+
+        @media (orientation: landscape) and (max-height: 650px) {
+            .gallery-viewport { aspect-ratio: auto; height: 70vh; }
+        }
+    </style>
+</head>
+<body class="font-montserrat bg-nude-50 text-gray-800">
+
+    <!-- ==================== MUSIC PLAYER ==================== -->
+    <button id="musicBtn" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-white shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 animate-pulse-glow flex items-center justify-center" onclick="toggleMusic()">
+        <svg id="musicIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    </button>
+    <audio id="bgMusic" loop>
+        <source src="assets/music.mp3.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- ==================== HERO / PORTADA ==================== -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="assets/hero.webp" alt="Portada" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-6 animate-fade-in-up">
+            <p class="font-montserrat text-gold-300 tracking-[0.3em] uppercase text-sm mb-4">Te invita a celebrar</p>
+            <h1 class="font-cormorant text-7xl md:text-9xl font-light text-white mb-2 leading-none">Delfina</h1>
+            <div class="flex items-center justify-center gap-4 my-6">
+                <span class="h-px w-16 bg-gold-400"></span>
+                <p class="font-cormorant text-5xl md:text-7xl italic text-gold-300">Mis 15</p>
+                <span class="h-px w-16 bg-gold-400"></span>
+            </div>
+            <p class="font-montserrat text-white/80 tracking-widest uppercase text-xs">Sábado 3 de Octubre 2026 · 21:00 hs</p>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+        </div>
+    </section>
+
+    <!-- ==================== CONTADOR REGRESIVO ==================== -->
+    <section id="countdown" class="py-20 bg-gradient-to-br from-nude-100 to-nude-200">
+        <div class="container mx-auto px-6 text-center section-hidden">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs mb-3">Faltan</p>
+            <div class="flex justify-center gap-4 md:gap-8 flex-wrap">
+                <div class="glass rounded-2xl p-4 md:p-6 min-w-[80px] md:min-w-[100px]">
+                    <span id="days" class="font-cormorant text-4xl md:text-5xl text-gold-600 block">00</span>
+                    <span class="font-montserrat text-[10px] md:text-xs text-nude-700 uppercase tracking-wider">Días</span>
+                </div>
+                <div class="glass rounded-2xl p-4 md:p-6 min-w-[80px] md:min-w-[100px]">
+                    <span id="hours" class="font-cormorant text-4xl md:text-5xl text-gold-600 block">00</span>
+                    <span class="font-montserrat text-[10px] md:text-xs text-nude-700 uppercase tracking-wider">Horas</span>
+                </div>
+                <div class="glass rounded-2xl p-4 md:p-6 min-w-[80px] md:min-w-[100px]">
+                    <span id="minutes" class="font-cormorant text-4xl md:text-5xl text-gold-600 block">00</span>
+                    <span class="font-montserrat text-[10px] md:text-xs text-nude-700 uppercase tracking-wider">Minutos</span>
+                </div>
+                <div class="glass rounded-2xl p-4 md:p-6 min-w-[80px] md:min-w-[100px]">
+                    <span id="seconds" class="font-cormorant text-4xl md:text-5xl text-gold-600 block">00</span>
+                    <span class="font-montserrat text-[10px] md:text-xs text-nude-700 uppercase tracking-wider">Segundos</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== UBICACIÓN Y HORARIOS ==================== -->
+    <section id="ubicacion" class="py-20 bg-white">
+        <div class="container mx-auto px-6 section-hidden">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Dónde y Cuándo</p>
+            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-12">El Evento</h2>
+            
+            <div class="max-w-md mx-auto">
+                <div class="bg-nude-50 rounded-3xl p-8 border border-nude-200 hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                    </div>
+                    <h3 class="font-cormorant text-2xl text-center text-nude-800 mb-4">Fiesta</h3>
+                    <div class="space-y-3 text-center font-montserrat text-sm text-nude-600">
+                        <p><span class="font-medium text-nude-800">Fecha:</span> Sábado 3 de Octubre 2026</p>
+                        <p><span class="font-medium text-nude-800">Hora:</span> 21:00 hs</p>
+                        <p><span class="font-medium text-nude-800">Lugar:</span> Cámara de Comercio</p>
+                        <p class="text-nude-500">Av. Vaccarezza 4, Alberti, Provincia de Buenos Aires</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mt-10">
+                <a href="https://maps.google.com/?q=Camara+de+Comercio,+Av.+Vaccarezza+4,+Alberti,+Provincia+de+Buenos+Aires" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-olive-500 text-white rounded-full font-montserrat text-sm font-medium hover:bg-olive-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Cómo llegar
+                </a>
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+15+Delfina&dates=20261004T000000Z/20261004T080000Z&location=Camara+de+Comercio,+Av.+Vaccarezza+4,+Alberti,+Provincia+de+Buenos+Aires" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-600 rounded-full font-montserrat text-sm font-medium hover:bg-gold-50 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Agendar evento
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== GALERÍA DE FOTOS ==================== -->
+    <section id="galeria" class="py-20 bg-nude-50">
+        <div class="container mx-auto px-6 section-hidden">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Recuerdos</p>
+            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-12">Galería</h2>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="hidden md:grid grid-cols-4 auto-rows-[150px] gap-4">
+                    <div class="gallery-item col-span-2 row-span-3 relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto1.webp" alt="Delfina, foto 1" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item row-span-2 relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto2.webp" alt="Delfina, foto 2" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item row-span-2 relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto3.webp" alt="Delfina, foto 3" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto4.webp" alt="Delfina, foto 4" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto5.webp" alt="Delfina, foto 5" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item col-span-2 row-span-2 relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto6.webp" alt="Delfina, foto 6" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto7.webp" alt="Delfina, foto 7" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto8.webp" alt="Delfina, foto 8" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto9.webp" alt="Delfina, foto 9" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto10.webp" alt="Delfina, foto 10" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="gallery-item col-span-2 relative overflow-hidden rounded-2xl cursor-pointer bg-nude-200" onclick="openLightbox(this)">
+                        <img src="assets/foto11.webp" alt="Delfina, foto 11" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                </div>
+
+                <div id="galleryViewport" class="gallery-viewport relative overflow-hidden rounded-3xl bg-nude-900 shadow-xl md:hidden">
+                    <div id="galleryTrack" class="gallery-track flex h-full">
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="0"><img src="assets/foto1.webp" alt="Delfina, foto 1" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="1"><img src="assets/foto2.webp" alt="Delfina, foto 2" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="2"><img src="assets/foto3.webp" alt="Delfina, foto 3" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="3"><img src="assets/foto4.webp" alt="Delfina, foto 4" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="4"><img src="assets/foto5.webp" alt="Delfina, foto 5" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="5"><img src="assets/foto6.webp" alt="Delfina, foto 6" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="6"><img src="assets/foto7.webp" alt="Delfina, foto 7" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="7"><img src="assets/foto8.webp" alt="Delfina, foto 8" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="8"><img src="assets/foto9.webp" alt="Delfina, foto 9" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="9"><img src="assets/foto10.webp" alt="Delfina, foto 10" class="w-full h-full object-contain"></button>
+                        <button type="button" class="gallery-slide min-w-full h-full" data-index="10"><img src="assets/foto11.webp" alt="Delfina, foto 11" class="w-full h-full object-contain"></button>
+                    </div>
+                    <button type="button" id="galleryPrevious" aria-label="Foto anterior" class="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/35 text-white text-3xl leading-none hover:bg-black/60 transition-colors">&#8249;</button>
+                    <button type="button" id="galleryNext" aria-label="Foto siguiente" class="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/35 text-white text-3xl leading-none hover:bg-black/60 transition-colors">&#8250;</button>
+                    <span id="galleryCounter" class="absolute top-4 right-4 rounded-full bg-black/45 px-3 py-1 font-montserrat text-xs text-white">1 / 11</span>
+                </div>
+                <div id="galleryDots" class="flex flex-wrap justify-center gap-2 mt-5 md:hidden"></div>
+                <p class="font-montserrat text-center text-xs text-nude-500 mt-4 md:hidden">Deslizá para recorrer las fotos o tocá una imagen para ampliarla.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-6" onclick="if (event.target === this) closeLightbox()">
+        <button class="absolute top-6 right-6 text-white/80 hover:text-white" onclick="closeLightbox()">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <img id="lightboxImg" src="" alt="Foto ampliada" class="max-w-full max-h-[85vh] object-contain rounded-lg">
+    </div>
+
+    <!-- ==================== FORMULARIO RSVP ==================== -->
+    <section id="rsvp" class="py-20 bg-gradient-to-br from-nude-100 to-white">
+        <div class="container mx-auto px-6 section-hidden">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Confirmá tu asistencia</p>
+            <p class="font-montserrat text-nude-500 text-center text-sm mb-10 max-w-md mx-auto">Tu presencia es el mejor regalo. Por favor confirmá tu asistencia.</p>
+            
+            <form id="rsvpForm" class="max-w-lg mx-auto space-y-6">
+                <div>
+                    <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Nombre y Apellido *</label>
+                    <input type="text" name="nombre" required class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 placeholder-nude-300 focus:border-gold-400 transition-colors" placeholder="Ej: María García">
+                </div>
+
+                <div>
+                    <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">¿Vas a asistir? *</label>
+                    <select name="asistencia" required class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors">
+                        <option value="">Seleccioná una opción</option>
+                        <option value="Sí, voy a ir">Sí, voy a ir</option>
+                        <option value="No podré asistir">No podré asistir</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Cantidad de acompañantes</label>
+                    <select id="acompaniantes" name="acompaniantes" class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors">
+                        <option value="0">Solo yo</option>
+                        <option value="1">1 acompañante</option>
+                        <option value="2">2 acompañantes</option>
+                        <option value="3">3 acompañantes</option>
+                        <option value="4">4 acompañantes</option>
+                        <option value="5">5 acompañantes</option>
+                    </select>
+                </div>
+
+                <div id="companionFields" class="hidden space-y-3">
+                    <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block">Nombre y menú de tus acompañantes *</label>
+                    <div id="companionInputs" class="space-y-3"></div>
+                </div>
+
+                <div>
+                    <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Menú</label>
+                    <select name="menu" class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors">
+                        <option value="Menú estándar">Menú estándar</option>
+                        <option value="Vegetariano">Vegetariano</option>
+                        <option value="Celíaco">Celíaco</option>
+                        <option value="Vegano">Vegano</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Mensaje o dedicatoria</label>
+                    <textarea name="mensaje" rows="3" class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 placeholder-nude-300 focus:border-gold-400 transition-colors resize-none" placeholder="Dejá tu mensaje para la cumpleañera..."></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-montserrat font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl">
+                    Confirmar asistencia
+                </button>
+            </form>
+
+            <div id="formSuccess" class="hidden max-w-lg mx-auto text-center py-12">
+                <div class="w-20 h-20 bg-olive-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-olive-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <h3 class="font-cormorant text-3xl text-nude-800 mb-2">¡Gracias por confirmar!</h3>
+                <p class="font-montserrat text-nude-500 text-sm">Tu respuesta fue registrada exitosamente.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CÓDIGO DE VESTIMENTA ==================== -->
+    <section id="dresscode" class="py-20 bg-white">
+        <div class="container mx-auto px-6 section-hidden">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Código de Vestimenta</p>
+            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-6">Elegante</h2>
+            
+            <div class="max-w-md mx-auto text-center">
+                <div class="w-24 h-24 bg-nude-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-12 h-12 text-nude-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                </div>
+                <p class="font-montserrat text-nude-600 text-sm leading-relaxed mb-4">
+                    Te pedimos que vengas elegante para acompañar la celebración.
+                </p>
+                <div class="bg-nude-50 rounded-2xl p-6 border border-nude-100">
+                    <p class="font-montserrat text-xs text-nude-500 uppercase tracking-wider mb-2">Aclaración importante</p>
+                    <p class="font-montserrat text-nude-600 text-sm">
+                        Por favor, evitá usar <span class="font-medium text-nude-800">azul, verde y tonos claros</span>, ya que son los colores reservados para la cumpleañera.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SUGERIR CANCIÓN ==================== -->
+    <section id="canciones" class="py-20 bg-gradient-to-br from-nude-800 to-nude-900 text-white">
+        <div class="container mx-auto px-6 section-hidden text-center">
+            <p class="font-montserrat text-gold-400 tracking-[0.2em] uppercase text-xs mb-2">Para el DJ</p>
+            <h2 class="font-cormorant text-4xl md:text-5xl mb-4">¿Qué canción no puede faltar?</h2>
+            <p class="font-montserrat text-white/60 text-sm mb-8 max-w-md mx-auto">Pasale tu tema favorito al DJ y hagamos bailar a todos.</p>
+            
+            <form id="songForm" class="max-w-md mx-auto flex gap-3">
+                <input type="text" id="songInput" placeholder="Nombre de la canción y artista" class="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 font-montserrat text-sm focus:border-gold-400 transition-colors">
+                <button type="submit" class="px-6 py-3 bg-gold-500 text-white rounded-xl font-montserrat text-sm font-medium hover:bg-gold-600 transition-colors">
+                    Enviar
+                </button>
+            </form>
+            <p id="songSuccess" class="hidden mt-4 font-montserrat text-olive-300 text-sm">¡Gracias! Tu canción fue registrada.</p>
+        </div>
+    </section>
+
+    <!-- ==================== MESA DE REGALOS ==================== -->
+    <section id="regalos" class="py-20 bg-white">
+        <div class="container mx-auto px-6 section-hidden">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Mesa de Regalos</p>
+            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-6">Tu presencia es el mejor regalo</h2>
+            
+            <div class="max-w-lg mx-auto">
+                <p class="font-montserrat text-nude-500 text-center text-sm mb-8 leading-relaxed">
+                    Si deseás hacernos un obsequio, podés colaborar con nuestra luna de mielle o realizar un depósito con los datos que encontrás a continuación.
+                </p>
+
+                <div class="bg-gradient-to-br from-nude-50 to-nude-100 rounded-3xl p-8 border border-nude-200">
+                    <div class="text-center mb-6">
+                        <p class="font-montserrat text-xs text-nude-500 uppercase tracking-wider mb-1">Alias</p>
+                        <p id="aliasText" class="font-montserrat text-xl font-semibold tracking-wide text-nude-800">delfina.poggi11</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-center mb-6">
+                        <div>
+                            <p class="font-montserrat text-[10px] text-nude-500 uppercase tracking-wider">Banco</p>
+                            <p class="font-montserrat text-sm text-nude-800 font-medium">Provincia Bs. As.</p>
+                        </div>
+                        <div>
+                            <p class="font-montserrat text-[10px] text-nude-500 uppercase tracking-wider">Titular</p>
+                            <p class="font-montserrat text-sm text-nude-800 font-medium">Delfina Poggi</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="font-montserrat text-[10px] text-nude-500 uppercase tracking-wider mb-1">CBU</p>
+                            <p id="cbuText" class="font-montserrat text-sm text-nude-800 font-medium tracking-wide">0140333403642451892093</p>
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                    <button onclick="copyAlias()" class="w-full py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-montserrat text-sm font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        <span id="copyBtnText">Copiar Alias</span>
+                    </button>
+                    <button onclick="copyCbu()" class="w-full py-3 border-2 border-gold-500 text-gold-600 font-montserrat text-sm font-medium rounded-xl hover:bg-gold-50 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        <span id="copyCbuBtnText">Copiar CBU</span>
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== INSTAGRAM / RECUERDOS ==================== -->
+    <section id="instagram" class="py-20 bg-gradient-to-br from-nude-100 to-nude-200">
+        <div class="container mx-auto px-6 section-hidden text-center">
+            <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs mb-2">Compartí tus fotos</p>
+            <h2 class="font-cormorant text-4xl md:text-5xl text-nude-800 mb-4">Recuerdos</h2>
+            <p class="font-montserrat text-nude-500 text-sm mb-8 max-w-md mx-auto">Usá nuestro hashtag para que todos los veamos juntos.</p>
+            
+            <div class="inline-block bg-white rounded-2xl px-8 py-4 shadow-sm border border-nude-100 mb-8">
+                <p class="font-cormorant text-3xl text-gold-600">#Mis15Delfina</p>
+            </div>
+
+            <div>
+                <a href="https://www.instagram.com/" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white rounded-full font-montserrat text-sm font-medium hover:opacity-90 transition-opacity">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Compartir en Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="py-12 bg-nude-900 text-center">
+        <p class="font-cormorant text-3xl text-gold-400 mb-2">Delfina</p>
+        <p class="font-montserrat text-white/40 text-xs tracking-widest uppercase">15 Años</p>
+        <div class="mt-6 flex justify-center gap-1">
+            <span class="w-1 h-1 bg-gold-400 rounded-full"></span>
+            <span class="w-1 h-1 bg-gold-400 rounded-full"></span>
+            <span class="w-1 h-1 bg-gold-400 rounded-full"></span>
+        </div>
+    </footer>
+
+    <!-- ==================== CONFETTI CONTAINER ==================== -->
+    <div id="confettiContainer" class="fixed inset-0 pointer-events-none z-40"></div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ==================== CONFIGURACIÓN ====================
+        // IMPORTANTE: Reemplazá esta URL con la de tu Webhook de Google Apps Script
+        const GOOGLE_SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxUsbM-KZDAH6rb05_4B3XWJYydeTSOUdeMTj1IlSlhH_AQOnx9V1A11W048aUzPdnSZA/exec';
+        
+        // Fecha del evento (AAAA, MM-1, DD) - Meses van de 0 a 11
+        const EVENT_DATE = new Date(2026, 9, 3, 21, 0, 0); // 3 de Octubre de 2026, 21:00
+
+        // ==================== MUSIC PLAYER ====================
+        let isPlaying = false;
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicBtn.classList.remove('animate-pulse-glow');
+            } else {
+                bgMusic.play().catch(() => {});
+                musicBtn.classList.add('animate-pulse-glow');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // ==================== COUNTDOWN ====================
+        function updateCountdown() {
+            const now = new Date();
+            const diff = EVENT_DATE - now;
+
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // ==================== SCROLL ANIMATIONS ====================
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('section-visible');
+                    entry.target.classList.remove('section-hidden');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section-hidden').forEach(el => observer.observe(el));
+
+        // ==================== ACOMPAÑANTES ====================
+        const companionCount = document.getElementById('acompaniantes');
+        const companionFields = document.getElementById('companionFields');
+        const companionInputs = document.getElementById('companionInputs');
+
+        companionCount.addEventListener('change', () => {
+            const count = Number(companionCount.value);
+            companionInputs.innerHTML = '';
+            companionFields.classList.toggle('hidden', count === 0);
+
+            for (let index = 1; index <= count; index += 1) {
+                const field = document.createElement('div');
+                field.className = 'grid gap-3 sm:grid-cols-2';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'nombreAcompaniante';
+                input.required = true;
+                input.placeholder = `Nombre y apellido del acompañante ${index}`;
+                input.className = 'w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 placeholder-nude-300 focus:border-gold-400 transition-colors';
+
+                const menu = document.createElement('select');
+                menu.name = 'menuAcompaniante';
+                menu.required = true;
+                menu.className = 'w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors';
+                ['Menú estándar', 'Vegetariano', 'Celíaco', 'Vegano'].forEach(optionLabel => {
+                    const option = document.createElement('option');
+                    option.value = optionLabel;
+                    option.textContent = optionLabel;
+                    menu.appendChild(option);
+                });
+
+                field.append(input, menu);
+                companionInputs.appendChild(field);
+            }
+        });
+
+        // ==================== LIGHTBOX ====================
+        function openLightbox(el) {
+            const img = el.querySelector('img');
+            document.getElementById('lightboxImg').src = img.src;
+            const lb = document.getElementById('lightbox');
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // ==================== GALERÍA TÁCTIL ====================
+        const galleryTrack = document.getElementById('galleryTrack');
+        const gallerySlides = [...document.querySelectorAll('.gallery-slide')];
+        const galleryDots = document.getElementById('galleryDots');
+        const galleryCounter = document.getElementById('galleryCounter');
+        let galleryIndex = 0;
+        let touchStartX = 0;
+        let galleryDragged = false;
+
+        function showGallery(index) {
+            galleryIndex = (index + gallerySlides.length) % gallerySlides.length;
+            galleryTrack.style.transform = `translateX(-${galleryIndex * 100}%)`;
+            galleryCounter.textContent = `${galleryIndex + 1} / ${gallerySlides.length}`;
+
+            [...galleryDots.children].forEach((dot, dotIndex) => {
+                dot.classList.toggle('bg-gold-500', dotIndex === galleryIndex);
+                dot.classList.toggle('bg-nude-300', dotIndex !== galleryIndex);
+                dot.setAttribute('aria-current', String(dotIndex === galleryIndex));
+            });
+        }
+
+        gallerySlides.forEach((slide, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'w-2 h-2 rounded-full bg-nude-300 transition-colors';
+            dot.setAttribute('aria-label', `Ver foto ${index + 1}`);
+            dot.addEventListener('click', () => showGallery(index));
+            galleryDots.appendChild(dot);
+        });
+
+        document.getElementById('galleryPrevious').addEventListener('click', () => showGallery(galleryIndex - 1));
+        document.getElementById('galleryNext').addEventListener('click', () => showGallery(galleryIndex + 1));
+
+        galleryTrack.addEventListener('pointerdown', event => {
+            touchStartX = event.clientX;
+            galleryDragged = false;
+            galleryTrack.setPointerCapture(event.pointerId);
+        });
+
+        galleryTrack.addEventListener('pointermove', event => {
+            if (Math.abs(event.clientX - touchStartX) > 10) galleryDragged = true;
+        });
+
+        galleryTrack.addEventListener('pointerup', event => {
+            const distance = event.clientX - touchStartX;
+            if (Math.abs(distance) > 45) showGallery(galleryIndex + (distance < 0 ? 1 : -1));
+            window.setTimeout(() => { galleryDragged = false; }, 0);
+        });
+
+        galleryTrack.addEventListener('click', event => {
+            if (galleryDragged) return;
+            const slide = event.target.closest('.gallery-slide');
+            if (slide) openLightbox(slide);
+        });
+
+        showGallery(0);
+
+        // ==================== RSVP FORM ====================
+        document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(this);
+            const data = {
+                nombre: formData.get('nombre'),
+                asistencia: formData.get('asistencia'),
+                acompaniantes: formData.get('acompaniantes'),
+                nombresAcompanantes: formData.getAll('nombreAcompaniante').join(', '),
+                menusAcompanantes: formData.getAll('nombreAcompaniante')
+                    .map((nombre, index) => `${nombre}: ${formData.getAll('menuAcompaniante')[index]}`)
+                    .join(' | '),
+                menu: formData.get('menu'),
+                mensaje: formData.get('mensaje')
+            };
+
+            try {
+                // Enviar a Google Sheets via Webhook
+                const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                // Mostrar éxito
+                document.getElementById('rsvpForm').classList.add('hidden');
+                document.getElementById('formSuccess').classList.remove('hidden');
+                createConfetti();
+
+            } catch (error) {
+                console.error('Error:', error);
+                // Igualmente mostrar éxito (modo offline / demo)
+                document.getElementById('rsvpForm').classList.add('hidden');
+                document.getElementById('formSuccess').classList.remove('hidden');
+                createConfetti();
+            }
+        });
+
+        // ==================== SONG FORM ====================
+        document.getElementById('songForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('songInput');
+            const song = input.value.trim();
+            if (!song) return;
+
+            try {
+                await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tipo: 'cancion', cancion: song })
+                });
+            } catch (e) {}
+
+            input.value = '';
+            document.getElementById('songSuccess').classList.remove('hidden');
+            setTimeout(() => document.getElementById('songSuccess').classList.add('hidden'), 3000);
+        });
+
+        // ==================== COPY ALIAS ====================
+        function copyAlias() {
+            navigator.clipboard.writeText('delfina.poggi11').then(() => {
+                const btn = document.getElementById('copyBtnText');
+                btn.textContent = '¡Copiado!';
+                setTimeout(() => btn.textContent = 'Copiar Alias', 2000);
+            });
+        }
+
+        function copyCbu() {
+            navigator.clipboard.writeText('0140333403642451892093').then(() => {
+                const btn = document.getElementById('copyCbuBtnText');
+                btn.textContent = '¡Copiado!';
+                setTimeout(() => btn.textContent = 'Copiar CBU', 2000);
+            });
+        }
+
+        // ==================== CONFETTI ====================
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#dda92b', '#e5c04e', '#f4e7b8', '#d4a08a', '#c4856c', '#ff6b6b', '#54a0ff'];
+            
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: absolute;
+                    width: ${Math.random() * 10 + 5}px;
+                    height: ${Math.random() * 10 + 5}px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    left: ${Math.random() * 100}%;
+                    top: -10px;
+                    border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                    animation: confetti-fall ${Math.random() * 3 + 2}s ease-out ${Math.random() * 0.5}s forwards;
+                `;
+                container.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
