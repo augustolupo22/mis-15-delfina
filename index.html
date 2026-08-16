@@ -88,12 +88,12 @@
 
     <!-- ==================== MUSIC PLAYER ==================== -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2">
-        <span id="musicHint" class="rounded-full bg-nude-900 px-3 py-1.5 font-montserrat text-xs font-medium text-white shadow-lg">Play / Pausa</span>
+        <span id="musicHint" class="rounded-full bg-nude-900 px-3 py-1.5 font-montserrat text-xs font-medium text-white shadow-lg">Play music</span>
         <button id="musicBtn" class="w-14 h-14 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-white shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 animate-pulse-glow flex items-center justify-center" onclick="toggleMusic()" aria-label="Reproducir o pausar música">
             <svg id="musicIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </button>
     </div>
-    <audio id="bgMusic" loop autoplay>
+    <audio id="bgMusic" loop autoplay playsinline preload="auto">
         <source src="assets/music.mp3.mp3" type="audio/mpeg">
     </audio>
 
@@ -446,11 +446,11 @@
             if (isPlaying) {
                 bgMusic.pause();
                 musicBtn.classList.remove('animate-pulse-glow');
-                document.getElementById('musicHint').textContent = 'Play / Pausa';
+                document.getElementById('musicHint').textContent = 'Play music';
             } else {
                 bgMusic.play().catch(() => {});
                 musicBtn.classList.add('animate-pulse-glow');
-                document.getElementById('musicHint').textContent = 'Pausar música';
+                document.getElementById('musicHint').textContent = 'Pause music';
             }
             isPlaying = !isPlaying;
         }
@@ -461,9 +461,18 @@
             bgMusic.volume = 0.55;
             bgMusic.play().then(() => {
                 isPlaying = true;
-                document.getElementById('musicHint').textContent = 'Pausar música';
+                document.getElementById('musicHint').textContent = 'Pause music';
             }).catch(() => {});
         });
+
+        document.addEventListener('pointerdown', event => {
+            if (event.target.closest('#musicBtn')) return;
+            if (isPlaying) return;
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                document.getElementById('musicHint').textContent = 'Pause music';
+            }).catch(() => {});
+        }, { once: true });
 
         // ==================== COUNTDOWN ====================
         function updateCountdown() {
