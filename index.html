@@ -54,7 +54,7 @@
         
         input:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(176, 106, 80, 0.35); }
 
-        .hero-photo { object-position: 28% 38%; }
+        .hero-photo { object-position: 28% 38%; animation: ken-burns 20s ease-in-out infinite alternate; will-change: transform; }
         .text-nude-500 { color: #663e34 !important; }
         .text-nude-600 { color: #4d2d24 !important; }
         .text-nude-700 { color: #3d241d !important; }
@@ -78,22 +78,217 @@
         .gallery-grid { grid-auto-rows: 118px; }
         .gallery-item img { transition: transform 350ms ease; }
 
+        /* ==================== ANIMACIONES EXTRA ==================== */
+        @keyframes ken-burns { 0% { transform: scale(1) translateY(0); } 100% { transform: scale(1.12) translateY(-2%); } }
+        @keyframes sparkle-twinkle { 0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); } 50% { opacity: 0.9; transform: scale(1) rotate(180deg); } }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fade-in-scale { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes number-pop { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+        @keyframes button-shine { 0% { transform: translateX(-150%) skewX(-20deg); } 100% { transform: translateX(320%) skewX(-20deg); } }
+        @keyframes float-particle { 0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; } 50% { transform: translateY(-30px) translateX(12px); opacity: 0.8; } }
+
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(244, 231, 184, 0.95) 0%, rgba(221, 169, 43, 0.4) 45%, transparent 72%);
+            animation: sparkle-twinkle 3.5s ease-in-out infinite;
+        }
+
+        .glass { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .glass:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(176, 106, 80, 0.18); }
+
+        .num-pop { animation: number-pop 0.6s ease; }
+
+        .section-title { position: relative; }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -12px;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, transparent, #dda92b, transparent);
+            transition: width 0.9s ease 0.35s;
+        }
+        .section-visible .section-title::after { width: 84px; }
+
+        .gallery-item { opacity: 0; transform: scale(0.94); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .gallery-item.is-visible { opacity: 1; transform: scale(1); }
+
+        .btn-shine { position: relative; overflow: hidden; }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+            transform: translateX(-150%) skewX(-20deg);
+            pointer-events: none;
+        }
+        .btn-shine:hover::after { animation: button-shine 0.9s ease forwards; }
+
+        /* ==================== SELECTS / FORMULARIO ==================== */
+        .form-field { position: relative; }
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+        }
+        .form-field input:hover,
+        .form-field select:hover,
+        .form-field textarea:hover {
+            border-color: #d4a08a;
+            background-color: #fdf8f6;
+        }
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: #dda92b;
+            box-shadow: 0 0 0 3px rgba(221, 169, 43, 0.2);
+            transform: translateY(-1px);
+            background-color: #fff;
+        }
+        /* ==================== CUSTOM SELECT ==================== */
+        .custom-select {
+            position: relative;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .custom-select-trigger {
+            width: 100%;
+            min-height: 58px;
+            padding: 14px 46px 14px 16px;
+            border-radius: 12px;
+            border: 1.5px solid #e8c4b5;
+            background: linear-gradient(to bottom, #fff 0%, #fdf8f6 100%);
+            color: #3d241d;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+        }
+        .custom-select-trigger:hover {
+            border-color: #d4a08a;
+            background-color: #fdf8f6;
+        }
+        .custom-select.is-open .custom-select-trigger {
+            border-color: #dda92b;
+            box-shadow: 0 0 0 3px rgba(221, 169, 43, 0.2);
+            transform: translateY(-1px);
+        }
+        .custom-select-value {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+        .custom-select-arrow {
+            flex-shrink: 0;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid #935542;
+            border-bottom: 2px solid #935542;
+            transform: rotate(45deg) translateY(-3px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .custom-select.is-open .custom-select-arrow {
+            transform: rotate(-135deg) translateY(-3px);
+            border-color: #dda92b;
+        }
+        .custom-select-options {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: #fff;
+            border: 1px solid #e8c4b5;
+            border-radius: 12px;
+            box-shadow: 0 20px 45px rgba(102, 62, 52, 0.18);
+            max-height: 248px;
+            overflow-y: auto;
+            padding: 6px;
+            margin: 0;
+            list-style: none;
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .custom-select.is-open .custom-select-options {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .custom-select-option {
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #3d241d;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        }
+        .custom-select-option:hover {
+            background-color: #f9ede8;
+            color: #935542;
+            padding-left: 18px;
+        }
+        .custom-select-option.is-selected {
+            background-color: #fdf6e9;
+            color: #a3661b;
+            font-weight: 600;
+        }
+        .custom-select-option.is-selected::after {
+            content: '✓';
+            color: #dda92b;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .custom-select-option.is-placeholder { color: #c4856c; }
+        .custom-select-option.is-placeholder:hover { background-color: #fdf8f6; color: #935542; }
+        .custom-select.is-error .custom-select-trigger {
+            border-color: #e0533d;
+            box-shadow: 0 0 0 3px rgba(224, 83, 61, 0.18);
+        }
+        .custom-select-native { display: none; }
+
+        #lightbox { animation: fade-in 0.3s ease; }
+        #lightboxImg { animation: fade-in-scale 0.4s ease; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+
         @media (min-width: 640px) {
             .gallery-grid { grid-auto-rows: 150px; }
-            .hero-photo { object-position: 30% 42%; transform: scale(1.04); }
+            .hero-photo { object-position: 30% 42%; }
         }
     </style>
 </head>
 <body class="font-montserrat bg-nude-50 text-gray-800">
 
+    <!-- ==================== BARRA DE PROGRESO ==================== -->
+    <div id="scrollProgress" class="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 z-[60] rounded-r-full" style="width:0%"></div>
+
     <!-- ==================== MUSIC PLAYER ==================== -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2">
         <span id="musicHint" class="rounded-full bg-nude-900 px-3 py-1.5 font-montserrat text-xs font-medium text-white shadow-lg">Play music</span>
-        <button id="musicBtn" class="w-14 h-14 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-white shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 animate-pulse-glow flex items-center justify-center" onclick="toggleMusic()" aria-label="Reproducir o pausar música">
+        <button id="musicBtn" class="w-14 h-14 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-white shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center" onclick="toggleMusic()" aria-label="Reproducir o pausar música">
             <svg id="musicIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </button>
     </div>
-    <audio id="bgMusic" loop autoplay playsinline preload="auto">
+    <audio id="bgMusic" loop playsinline preload="auto">
         <source src="assets/music.mp3.mp3" type="audio/mpeg">
     </audio>
 
@@ -103,6 +298,7 @@
             <img src="assets/hero.webp" alt="Portada" class="hero-photo w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/80"></div>
         </div>
+        <div id="heroSparkles" class="absolute inset-0 pointer-events-none z-[1]"></div>
         
         <div class="relative z-10 text-center px-6 animate-fade-in-up">
             <p class="font-montserrat text-gold-300 tracking-[0.3em] uppercase text-sm mb-4">Te invita a celebrar</p>
@@ -149,11 +345,11 @@
     <section id="ubicacion" class="py-20 bg-white">
         <div class="container mx-auto px-6 section-hidden">
             <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Dónde y Cuándo</p>
-            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-12">El Evento</h2>
+            <h2 class="section-title font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-12">El Evento</h2>
             
             <div class="max-w-md mx-auto">
                 <div class="bg-nude-50 rounded-3xl p-8 border border-nude-200 hover:shadow-xl transition-shadow duration-300">
-                    <div class="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <div class="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mb-6 mx-auto animate-float">
                         <svg class="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                     </div>
                     <h3 class="font-cormorant text-2xl text-center text-nude-800 mb-4">Fiesta</h3>
@@ -167,11 +363,11 @@
             </div>
 
             <div class="flex flex-col sm:flex-row justify-center gap-4 mt-10">
-                <a href="https://maps.google.com/?q=Camara+de+Comercio,+Av.+Vaccarezza+4,+Alberti,+Provincia+de+Buenos+Aires" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-olive-500 text-white rounded-full font-montserrat text-sm font-medium hover:bg-olive-600 transition-colors">
+                <a href="https://maps.google.com/?q=Camara+de+Comercio,+Av.+Vaccarezza+4,+Alberti,+Provincia+de+Buenos+Aires" target="_blank" class="btn-shine inline-flex items-center justify-center gap-2 px-6 py-3 bg-olive-500 text-white rounded-full font-montserrat text-sm font-medium hover:bg-olive-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     Cómo llegar
                 </a>
-                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+15+Delfina&dates=20261004T000000Z/20261004T080000Z&location=Camara+de+Comercio,+Av.+Vaccarezza+4,+Alberti,+Provincia+de+Buenos+Aires" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-600 rounded-full font-montserrat text-sm font-medium hover:bg-gold-50 transition-colors">
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+15+Delfina&dates=20261004T000000Z/20261004T080000Z&location=Camara+de+Comercio,+Av.+Vaccarezza+4,+Alberti,+Provincia+de+Buenos+Aires" target="_blank" class="btn-shine inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-600 rounded-full font-montserrat text-sm font-medium hover:bg-gold-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     Agendar evento
                 </a>
@@ -183,7 +379,7 @@
     <section id="galeria" class="py-20 bg-nude-50">
         <div class="container mx-auto px-6 section-hidden">
             <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Recuerdos</p>
-            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-12">Galería</h2>
+            <h2 class="section-title font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-12">Galería</h2>
             
             <div class="max-w-5xl mx-auto">
                 <div class="gallery-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
@@ -245,23 +441,48 @@
             <p class="font-montserrat text-nude-500 text-center text-sm mb-10 max-w-md mx-auto">Tu presencia es el mejor regalo. Por favor confirmá tu asistencia.</p>
             
             <form id="rsvpForm" class="max-w-lg mx-auto space-y-6">
-                <div>
+                <div class="form-field">
                     <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Nombre y Apellido *</label>
                     <input type="text" name="nombre" required class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 placeholder-nude-300 focus:border-gold-400 transition-colors" placeholder="Ej: María García">
                 </div>
 
-                <div>
+                <div class="form-field">
                     <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">¿Vas a asistir? *</label>
-                    <select name="asistencia" required class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors">
+                    <div class="custom-select" data-target="asistencia">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-value">Seleccioná una opción</span>
+                            <span class="custom-select-arrow"></span>
+                        </button>
+                        <ul class="custom-select-options" role="listbox">
+                            <li class="custom-select-option is-placeholder" data-value="" role="option">Seleccioná una opción</li>
+                            <li class="custom-select-option" data-value="Sí, voy a ir" role="option">Sí, voy a ir</li>
+                            <li class="custom-select-option" data-value="No podré asistir" role="option">No podré asistir</li>
+                        </ul>
+                    </div>
+                    <select id="asistencia" name="asistencia" required class="custom-select-native" tabindex="-1" aria-hidden="true">
                         <option value="">Seleccioná una opción</option>
                         <option value="Sí, voy a ir">Sí, voy a ir</option>
                         <option value="No podré asistir">No podré asistir</option>
                     </select>
                 </div>
 
-                <div>
+                <div class="form-field">
                     <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Cantidad de acompañantes</label>
-                    <select id="acompaniantes" name="acompaniantes" class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors">
+                    <div class="custom-select" data-target="acompaniantes">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-value">Solo yo</span>
+                            <span class="custom-select-arrow"></span>
+                        </button>
+                        <ul class="custom-select-options" role="listbox">
+                            <li class="custom-select-option is-selected" data-value="0" role="option">Solo yo</li>
+                            <li class="custom-select-option" data-value="1" role="option">1 acompañante</li>
+                            <li class="custom-select-option" data-value="2" role="option">2 acompañantes</li>
+                            <li class="custom-select-option" data-value="3" role="option">3 acompañantes</li>
+                            <li class="custom-select-option" data-value="4" role="option">4 acompañantes</li>
+                            <li class="custom-select-option" data-value="5" role="option">5 acompañantes</li>
+                        </ul>
+                    </div>
+                    <select id="acompaniantes" name="acompaniantes" class="custom-select-native" tabindex="-1" aria-hidden="true">
                         <option value="0">Solo yo</option>
                         <option value="1">1 acompañante</option>
                         <option value="2">2 acompañantes</option>
@@ -276,9 +497,21 @@
                     <div id="companionInputs" class="space-y-3"></div>
                 </div>
 
-                <div>
+                <div class="form-field">
                     <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Menú</label>
-                    <select name="menu" class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors">
+                    <div class="custom-select" data-target="menu">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-value">Menú estándar</span>
+                            <span class="custom-select-arrow"></span>
+                        </button>
+                        <ul class="custom-select-options" role="listbox">
+                            <li class="custom-select-option is-selected" data-value="Menú estándar" role="option">Menú estándar</li>
+                            <li class="custom-select-option" data-value="Vegetariano" role="option">Vegetariano</li>
+                            <li class="custom-select-option" data-value="Celíaco" role="option">Celíaco</li>
+                            <li class="custom-select-option" data-value="Vegano" role="option">Vegano</li>
+                        </ul>
+                    </div>
+                    <select id="menu" name="menu" class="custom-select-native" tabindex="-1" aria-hidden="true">
                         <option value="Menú estándar">Menú estándar</option>
                         <option value="Vegetariano">Vegetariano</option>
                         <option value="Celíaco">Celíaco</option>
@@ -286,12 +519,12 @@
                     </select>
                 </div>
 
-                <div>
+                <div class="form-field">
                     <label class="font-montserrat text-xs text-nude-600 uppercase tracking-wider block mb-2">Mensaje o dedicatoria</label>
                     <textarea name="mensaje" rows="3" class="w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 placeholder-nude-300 focus:border-gold-400 transition-colors resize-none" placeholder="Dejá tu mensaje para la cumpleañera..."></textarea>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-montserrat font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl">
+                <button type="submit" id="submitBtn" class="btn-shine w-full py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-montserrat font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl">
                     Confirmar asistencia
                 </button>
             </form>
@@ -310,10 +543,10 @@
     <section id="dresscode" class="py-20 bg-white">
         <div class="container mx-auto px-6 section-hidden">
             <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Código de Vestimenta</p>
-            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-6">Elegante</h2>
+            <h2 class="section-title font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-6">Elegante</h2>
             
             <div class="max-w-md mx-auto text-center">
-                <div class="w-24 h-24 bg-nude-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div class="w-24 h-24 bg-nude-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-float">
                     <svg class="w-12 h-12 text-nude-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                 </div>
                 <p class="font-montserrat text-nude-600 text-sm leading-relaxed mb-4">
@@ -333,12 +566,12 @@
     <section id="canciones" class="py-20 bg-gradient-to-br from-nude-800 to-nude-900 text-white">
         <div class="container mx-auto px-6 section-hidden text-center">
             <p class="font-montserrat text-gold-400 tracking-[0.2em] uppercase text-xs mb-2">Para el DJ</p>
-            <h2 class="font-cormorant text-4xl md:text-5xl mb-4">¿Qué canción no puede faltar?</h2>
+            <h2 class="section-title font-cormorant text-4xl md:text-5xl mb-4">¿Qué canción no puede faltar?</h2>
             <p class="font-montserrat text-white/85 text-sm mb-8 max-w-md mx-auto">Pasale tu tema favorito al DJ y hagamos bailar a todos.</p>
             
             <form id="songForm" class="max-w-md mx-auto flex gap-3">
                 <input type="text" id="songInput" placeholder="Nombre de la canción y artista" class="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 font-montserrat text-sm focus:border-gold-400 transition-colors">
-                <button type="submit" class="px-6 py-3 bg-gold-500 text-white rounded-xl font-montserrat text-sm font-medium hover:bg-gold-600 transition-colors">
+                <button type="submit" class="btn-shine px-6 py-3 bg-gold-500 text-white rounded-xl font-montserrat text-sm font-medium hover:bg-gold-600 transition-colors">
                     Enviar
                 </button>
             </form>
@@ -350,7 +583,7 @@
     <section id="regalos" class="py-20 bg-white">
         <div class="container mx-auto px-6 section-hidden">
             <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs text-center mb-2">Mesa de Regalos</p>
-            <h2 class="font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-6">Tu presencia es el mejor regalo</h2>
+            <h2 class="section-title font-cormorant text-4xl md:text-5xl text-center text-nude-800 mb-6">Tu presencia es el mejor regalo</h2>
             
             <div class="max-w-lg mx-auto">
                 <p class="font-montserrat text-nude-500 text-center text-sm mb-8 leading-relaxed">
@@ -379,11 +612,11 @@
                     </div>
 
                     <div class="grid sm:grid-cols-2 gap-3">
-                    <button onclick="copyAlias()" class="w-full py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-montserrat text-sm font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all duration-300 flex items-center justify-center gap-2">
+                    <button onclick="copyAlias()" class="btn-shine w-full py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-montserrat text-sm font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all duration-300 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         <span id="copyBtnText">Copiar Alias</span>
                     </button>
-                    <button onclick="copyCbu()" class="w-full py-3 border-2 border-gold-500 text-gold-600 font-montserrat text-sm font-medium rounded-xl hover:bg-gold-50 transition-all duration-300 flex items-center justify-center gap-2">
+                    <button onclick="copyCbu()" class="btn-shine w-full py-3 border-2 border-gold-500 text-gold-600 font-montserrat text-sm font-medium rounded-xl hover:bg-gold-50 transition-all duration-300 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                         <span id="copyCbuBtnText">Copiar CBU</span>
                     </button>
@@ -397,7 +630,7 @@
     <section id="instagram" class="py-20 bg-gradient-to-br from-nude-100 to-nude-200">
         <div class="container mx-auto px-6 section-hidden text-center">
             <p class="font-montserrat text-gold-600 tracking-[0.2em] uppercase text-xs mb-2">Compartí tus fotos</p>
-            <h2 class="font-cormorant text-4xl md:text-5xl text-nude-800 mb-4">Recuerdos</h2>
+            <h2 class="section-title font-cormorant text-4xl md:text-5xl text-nude-800 mb-4">Recuerdos</h2>
             <p class="font-montserrat text-nude-500 text-sm mb-8 max-w-md mx-auto">Usá nuestro hashtag para que todos los veamos juntos.</p>
             
             <div class="inline-block bg-white rounded-2xl px-8 py-4 shadow-sm border border-nude-100 mb-8">
@@ -405,7 +638,7 @@
             </div>
 
             <div>
-                <a href="https://www.instagram.com/" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white rounded-full font-montserrat text-sm font-medium hover:opacity-90 transition-opacity">
+                <a href="https://www.instagram.com/" target="_blank" class="btn-shine inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white rounded-full font-montserrat text-sm font-medium hover:opacity-90 transition-opacity">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     Compartir en Instagram
                 </a>
@@ -455,26 +688,22 @@
             isPlaying = !isPlaying;
         }
 
-        // Los navegadores que lo permiten inician la canción al abrir la invitación.
-        // En iPhone/Android, si el autoplay está bloqueado, el botón la inicia con un toque.
+        // La música solo se inicia cuando el usuario toca el botón (abajo a la derecha).
         window.addEventListener('load', () => {
             bgMusic.volume = 0.55;
-            bgMusic.play().then(() => {
-                isPlaying = true;
-                document.getElementById('musicHint').textContent = 'Pause music';
-            }).catch(() => {});
         });
 
-        document.addEventListener('pointerdown', event => {
-            if (event.target.closest('#musicBtn')) return;
-            if (isPlaying) return;
-            bgMusic.play().then(() => {
-                isPlaying = true;
-                document.getElementById('musicHint').textContent = 'Pause music';
-            }).catch(() => {});
-        }, { once: true });
-
         // ==================== COUNTDOWN ====================
+        const countdownIds = ['days', 'hours', 'minutes', 'seconds'];
+        const lastCountdownValues = {};
+
+        function pulseCountdown(id) {
+            const el = document.getElementById(id);
+            el.classList.remove('num-pop');
+            void el.offsetWidth;
+            el.classList.add('num-pop');
+        }
+
         function updateCountdown() {
             const now = new Date();
             const diff = EVENT_DATE - now;
@@ -496,6 +725,14 @@
             document.getElementById('hours').textContent = String(hours).padStart(2, '0');
             document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
             document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+            countdownIds.forEach(id => {
+                const value = document.getElementById(id).textContent;
+                if (lastCountdownValues[id] !== undefined && lastCountdownValues[id] !== value) {
+                    pulseCountdown(id);
+                }
+                lastCountdownValues[id] = value;
+            });
         }
 
         updateCountdown();
@@ -514,6 +751,95 @@
 
         document.querySelectorAll('.section-hidden').forEach(el => observer.observe(el));
 
+        // ==================== BARRA DE PROGRESO ====================
+        const scrollProgressBar = document.getElementById('scrollProgress');
+        window.addEventListener('scroll', () => {
+            const doc = document.documentElement;
+            const max = doc.scrollHeight - doc.clientHeight;
+            const progress = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+            scrollProgressBar.style.width = `${progress}%`;
+        }, { passive: true });
+
+        // ==================== SPARKLES EN HERO ====================
+        const heroSparkles = document.getElementById('heroSparkles');
+        if (heroSparkles) {
+            for (let i = 0; i < 18; i++) {
+                const sparkle = document.createElement('div');
+                const size = Math.random() * 7 + 3;
+                sparkle.className = 'sparkle';
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                sparkle.style.left = `${Math.random() * 100}%`;
+                sparkle.style.top = `${Math.random() * 100}%`;
+                sparkle.style.animationDelay = `${Math.random() * 5}s`;
+                sparkle.style.animationDuration = `${Math.random() * 2.5 + 2}s`;
+                heroSparkles.appendChild(sparkle);
+            }
+        }
+
+        // ==================== GALERÍA: APARICIÓN ESCALONADA ====================
+        const galleryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    galleryObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.gallery-item').forEach((el, i) => {
+            el.style.transitionDelay = `${(i % 4) * 0.08}s`;
+            galleryObserver.observe(el);
+        });
+
+        // ==================== CUSTOM SELECT ====================
+        function initCustomSelect(customSelect) {
+            const trigger = customSelect.querySelector('.custom-select-trigger');
+            const valueEl = customSelect.querySelector('.custom-select-value');
+            const options = [...customSelect.querySelectorAll('.custom-select-option')];
+            const native = document.getElementById(customSelect.dataset.target);
+            if (!native) return;
+
+            function syncDisplay() {
+                const selected = options.find(o => o.dataset.value === native.value);
+                valueEl.textContent = selected ? selected.textContent : (native.selectedOptions[0] ? native.selectedOptions[0].textContent : '');
+                options.forEach(o => o.classList.toggle('is-selected', o.dataset.value === native.value));
+                trigger.setAttribute('aria-expanded', customSelect.classList.contains('is-open') ? 'true' : 'false');
+            }
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                customSelect.classList.toggle('is-open');
+                syncDisplay();
+            });
+
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    native.value = option.dataset.value;
+                    native.dispatchEvent(new Event('change', { bubbles: true }));
+                    customSelect.classList.remove('is-open');
+                    customSelect.classList.remove('is-error');
+                    syncDisplay();
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!customSelect.contains(e.target)) customSelect.classList.remove('is-open');
+            });
+
+            trigger.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') customSelect.classList.remove('is-open');
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    customSelect.classList.add('is-open');
+                }
+            });
+
+            syncDisplay();
+        }
+
+        document.querySelectorAll('.custom-select').forEach(initCustomSelect);
+
         // ==================== ACOMPAÑANTES ====================
         const companionCount = document.getElementById('acompaniantes');
         const companionFields = document.getElementById('companionFields');
@@ -526,7 +852,7 @@
 
             for (let index = 1; index <= count; index += 1) {
                 const field = document.createElement('div');
-                field.className = 'grid gap-3 sm:grid-cols-2';
+                field.className = 'form-field grid gap-3 sm:grid-cols-2';
 
                 const input = document.createElement('input');
                 input.type = 'text';
@@ -535,19 +861,52 @@
                 input.placeholder = `Nombre y apellido del acompañante ${index}`;
                 input.className = 'w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 placeholder-nude-300 focus:border-gold-400 transition-colors';
 
-                const menu = document.createElement('select');
-                menu.name = 'menuAcompaniante';
-                menu.required = true;
-                menu.className = 'w-full px-4 py-3 rounded-xl border border-nude-200 bg-white font-montserrat text-sm text-nude-800 focus:border-gold-400 transition-colors';
+                const customSelect = document.createElement('div');
+                customSelect.className = 'custom-select';
+                customSelect.dataset.target = `menuAcompaniante_${index}`;
+
+                const trigger = document.createElement('button');
+                trigger.type = 'button';
+                trigger.className = 'custom-select-trigger';
+                trigger.setAttribute('aria-haspopup', 'listbox');
+                trigger.setAttribute('aria-expanded', 'false');
+                const valueEl = document.createElement('span');
+                valueEl.className = 'custom-select-value';
+                valueEl.textContent = 'Menú estándar';
+                const arrow = document.createElement('span');
+                arrow.className = 'custom-select-arrow';
+                trigger.append(valueEl, arrow);
+
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'custom-select-options';
+                optionsList.setAttribute('role', 'listbox');
+                ['Menú estándar', 'Vegetariano', 'Celíaco', 'Vegano'].forEach(optionLabel => {
+                    const li = document.createElement('li');
+                    li.className = 'custom-select-option';
+                    li.dataset.value = optionLabel;
+                    li.setAttribute('role', 'option');
+                    li.textContent = optionLabel;
+                    if (optionLabel === 'Menú estándar') li.classList.add('is-selected');
+                    optionsList.appendChild(li);
+                });
+
+                const native = document.createElement('select');
+                native.name = 'menuAcompaniante';
+                native.required = true;
+                native.className = 'custom-select-native';
+                native.id = `menuAcompaniante_${index}`;
                 ['Menú estándar', 'Vegetariano', 'Celíaco', 'Vegano'].forEach(optionLabel => {
                     const option = document.createElement('option');
                     option.value = optionLabel;
                     option.textContent = optionLabel;
-                    menu.appendChild(option);
+                    native.appendChild(option);
                 });
+                native.value = 'Menú estándar';
 
-                field.append(input, menu);
+                customSelect.append(trigger, optionsList, native);
+                field.append(input, customSelect);
                 companionInputs.appendChild(field);
+                initCustomSelect(customSelect);
             }
         });
 
@@ -597,6 +956,15 @@
         // ==================== RSVP FORM ====================
         document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const asistenciaNative = document.querySelector('select[name="asistencia"]');
+            const asistenciaCustom = document.querySelector('.custom-select[data-target="asistencia"]');
+            if (!asistenciaNative.value) {
+                asistenciaCustom.classList.add('is-error');
+                asistenciaCustom.querySelector('.custom-select-trigger').focus();
+                asistenciaCustom.classList.remove('is-open');
+                return;
+            }
             
             const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.textContent;
